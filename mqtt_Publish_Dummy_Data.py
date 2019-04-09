@@ -12,7 +12,6 @@ import random
 import threading
 import json
 from datetime import datetime
-
 # ====================================================
 # MQTT Settings
 MQTT_Broker = "iot.eclipse.org"

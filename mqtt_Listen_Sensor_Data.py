@@ -5,35 +5,46 @@
 # --- Python Ver: 2.7
 # --- Details At: https://iotbytes.wordpress.com/store-mqtt-data-from-sensors-into-sql-database/
 # ------------------------------------------
-
+print("Listener has started")
 import paho.mqtt.client as mqtt
 from store_Sensor_Data_to_DB import sensor_Data_Handler
 
 # MQTT Settings
 MQTT_Broker = "iot.eclipse.org"
 # MQTT_Broker = "localhost"
-# MQTT_Broker = "192.168.1.001"
 MQTT_Port = 1883
 Keep_Alive_Interval = 45
 MQTT_Topic = "Home/Sensors/#"
 
-# Subscribe to all Sensors at Base Topic
+# Assign event callbacks
+mqttc = mqtt.Client()
 
 
 # Subscribe to all Sensors at Base Topic
-def on_connect(mosq, obj, rc):
+
+
+def on_connect(client, userdata, flags, rc):
+    print("Connected with result code "+str(rc))
     mqttc.subscribe(MQTT_Topic, 0)
 
-# Save Data into DB Table
+# save data into DB table
 
 
-def on_message(mosq, obj, msg):
-    # This is the Master Call for saving MQTT Data into DB
-    # For details of "sensor_Data_Handler" function please refer "sensor_data_to_db.py"
+def on_message(client, userdata, msg):
+    count = 0
+    # print("Message: " + count)
+    print("Stepped into 'on_message'... Count = ", count)
+    print(msg.topic)
+    print(msg.payload)
+
+    # # This is the Master Call for saving MQTT Data into DB
+    # # For details of "sensor_Data_Handler" function please refer "sensor_data_to_db.py"
+
     print("MQTT Data Received...")
-    print("MQTT Topic: " + msg.topic)
-    print("Data: " + msg.payload)
+    print("MQTT Topic: ", msg.topic)
+    print("Data: ", msg.payload)
     sensor_Data_Handler(msg.topic, msg.payload)
+    # count = count + 1
 
 
 def on_subscribe(mosq, obj, mid, granted_qos):
